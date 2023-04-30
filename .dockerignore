@@ -1,0 +1,4 @@
+# build folders and similar which are not needed for the docker build
+target
+dist
+pkg
