@@ -24,8 +24,8 @@ RUN perseus deploy
 FROM alpine:latest as runner
 
 # Copy resources
-COPY --from=builder /app/pkg/server /app/server
+COPY --from=builder /app/pkg /app/
 RUN ls /app/server
 
 EXPOSE 8080
-CMD ["/app/server"]
+CMD ["/app/pkg/server"]
