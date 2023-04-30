@@ -1,7 +1,7 @@
 use crate::{
   components::{
     head_common::{HeadCommon, HeadCommon_Props},
-    icon::{Icon, IconAndText, IconAndText_Props, Icon_Props},
+    icon::{IconAndText, IconAndText_Props},
     scaffold::{Scaffold, ScaffoldProps},
   },
   constants::DEFAULT_ENDPOINT,
@@ -48,7 +48,6 @@ fn search_page<G: Html>(cx: Scope, state: &SearchPageStateRx) -> View<G> {
                   || p().class("block").t("No results"),
                   move || {
                     component(|| {
-                      // TorrentTable(cx, TorrentTable_Props::builder().torrents(torrents).build())
                       TorrentCard(
                         cx,
                         TorrentCard_Props::builder()
@@ -67,84 +66,6 @@ fn search_page<G: Html>(cx: Scope, state: &SearchPageStateRx) -> View<G> {
   })
 }
 
-// #[component(inline_props)]
-// fn TorrentTable<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>>) -> View<G> {
-//   table()
-//     .class("table is-narrow is-striped is-fullwidth")
-//     .c(
-//       thead().c(
-//         tr()
-//           .c(th().t("Name"))
-//           .c(th().t("Size"))
-//           .c(th().t("Seeds"))
-//           .c(th().t("Leeches"))
-//           .c(th().t("Created")),
-//       ),
-//     )
-//     .c(
-//       div().class("tbody").c(Keyed(
-//         cx,
-//         KeyedProps::builder()
-//           .iterable(torrents)
-//           .key(|x| x.infohash.clone())
-//           .view(|cx, torrent| {
-//             let magnet = magnet_link(&torrent);
-//             tr()
-//               .c(
-//                 td().c(
-//                   a()
-//                     .dyn_attr("href", move || Some(magnet.clone()))
-//                     .dyn_t(move || torrent.name.clone()),
-//                 ),
-//               )
-//               .c(td().c(component(|| {
-//                 IconAndText(
-//                   cx,
-//                   IconAndText_Props::builder()
-//                     .icon("feather/database")
-//                     .text(human_bytes(torrent.size_bytes as f64))
-//                     .text_class(None)
-//                     .build(),
-//                 )
-//               })))
-//               .c(td().c(component(|| {
-//                 IconAndText(
-//                   cx,
-//                   IconAndText_Props::builder()
-//                     .icon("feather/upload")
-//                     .text(format_num!(".2s", torrent.seeders))
-//                     .text_class(Some("has-text-primary"))
-//                     .build(),
-//                 )
-//               })))
-//               .c(td().c(component(|| {
-//                 IconAndText(
-//                   cx,
-//                   IconAndText_Props::builder()
-//                     .icon("feather/download")
-//                     .text(format_num!(".2s", torrent.leechers))
-//                     .text_class(Some("has-text-danger"))
-//                     .build(),
-//                 )
-//               })))
-//               .c(td().c(component(|| {
-//                 IconAndText(
-//                   cx,
-//                   IconAndText_Props::builder()
-//                     .icon("feather/calendar")
-//                     .text(pretty_date(torrent.created_unix))
-//                     .text_class(None)
-//                     .build(),
-//                 )
-//               })))
-//               .view(cx)
-//           })
-//           .build(),
-//       )),
-//     )
-//     .view(cx)
-// }
-
 #[component(inline_props)]
 fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>>) -> View<G> {
   div()
@@ -155,7 +76,6 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
         .key(|x| x.infohash.clone())
         .view(|cx, torrent| {
           let magnet = magnet_link(&torrent);
-          let magnet_2 = magnet.clone();
           div()
             .class("card mb-1")
             .c(
@@ -209,17 +129,7 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                           .text_class(None)
                           .build(),
                       )
-                    })))
-                    .c(
-                      div().class("column").c(
-                        a()
-                          .class("button is-ghost")
-                          .dyn_attr("href", move || Some(magnet_2.clone()))
-                          .c(component(|| {
-                            Icon(cx, Icon_Props::builder().icon("feather/link").build())
-                          })),
-                      ),
-                    ),
+                    }))),
                 ),
             )
             .view(cx)

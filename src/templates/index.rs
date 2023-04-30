@@ -18,43 +18,26 @@ struct IndexPageState {
 
 #[auto_scope]
 fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
+  // On reload, set loading to false
+  state.loading.set(false);
+
   component(|| {
     Scaffold(
       cx,
       ScaffoldProps::builder()
         .children(
           div()
-            .c(
-              section().class("section").c(
-                div()
-                  .class("container")
-                  .c(
-                    div()
-                      .class("field has-addons")
-                      .c(
-                        div()
-                          .class("control is-expanded")
-                          .c(view! { cx, input(class = "input", placeholder = "Search...", bind:value = state.search)}),
-                      )
-                      .c(
-                        div().class("control").c(
-                          a()
-                            .class("button is-info")
-                            .dyn_class("is-loading", || *state.loading.get())
-                            .attr("rel", "external")
-                            // TODO these are pointless because it isn't a form
-                            .attr("minLength", "3")
-                            .bool_attr("required", true)
-                            .on("click", |_| state.loading.set(true))
-                            .dyn_bool_attr("disabled", || *state.loading.get())
-                            .dyn_attr("href", || Some(format!("search/{}", *state.search)))
-                            .t("Search"),
-                        ),
-                      ),
-                  )
-                  .c(component(|| IntroText(cx))),
-              ),
-            )
+            .class("container")
+            .c(component(|| {
+              SearchField(
+                cx,
+                SearchField_Props::builder()
+                  .search(&state.search)
+                  .loading(&state.loading)
+                  .build(),
+              )
+            }))
+            .c(component(|| IntroText(cx)))
             .view(cx)
             .into(),
         )
@@ -63,8 +46,34 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
   })
 }
 
+#[component(inline_props)]
+fn SearchField<'a, G: Html>(
+  cx: Scope<'a>,
+  search: &'a Signal<String>,
+  loading: &'a Signal<bool>,
+) -> View<G> {
+  div()
+    .class("field has-addons")
+    .c(div().class("control is-expanded").c(view! {
+      cx,
+      input(class = "input", placeholder = "Search...", bind:value = search)
+    }))
+    .c(
+      div().class("control").c(
+        a()
+          .class("button is-info")
+          .dyn_class("is-loading", || *loading.get())
+          .dyn_bool_attr("disabled", || *loading.get())
+          .dyn_attr("href", || Some(format!("search/{}", *search)))
+          .on("click", |_| loading.set(true))
+          .t("Search"),
+      ),
+    )
+    .view(cx)
+}
+
 #[component]
-pub fn IntroText<G: Html>(cx: Scope) -> View<G> {
+fn IntroText<G: Html>(cx: Scope) -> View<G> {
   div()
     .class("content")
     .c(
