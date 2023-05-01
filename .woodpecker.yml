@@ -59,7 +59,7 @@ pipeline:
   publish_release_docker_image:
     image: woodpeckerci/plugin-docker-buildx
     settings:
-      repo: dessalines/torrents-csv-perseus-ui
+      repo: dessalines/torrents-csv-ui-perseus
       dockerfile: Dockerfile
       platforms: linux/amd64
       username:
