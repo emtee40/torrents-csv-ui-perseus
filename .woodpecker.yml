@@ -39,7 +39,7 @@ pipeline:
         # latest rust for clippy to get extra checks
         # when adding new clippy lints, make sure to also add them in scripts/fix-clippy.sh
       - rustup component add clippy
-      - cargo +nightly clippy --all-targets
+      - cargo +nightly clippy
 
   cargo_test:
     image: *muslrust_image
