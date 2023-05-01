@@ -28,4 +28,4 @@ COPY --from=builder /app/pkg /app/
 RUN ls /app/server
 
 EXPOSE 8080
-CMD ["/app/pkg/server"]
+CMD ["/app/server"]
