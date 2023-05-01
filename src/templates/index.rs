@@ -26,18 +26,22 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
       cx,
       ScaffoldProps::builder()
         .children(
-          div()
-            .class("container")
-            .c(component(|| {
-              SearchField(
-                cx,
-                SearchField_Props::builder()
-                  .search(&state.search)
-                  .loading(&state.loading)
-                  .build(),
-              )
-            }))
-            .c(component(|| IntroText(cx)))
+          section()
+            .class("section pt-1")
+            .c(
+              div()
+                .class("container")
+                .c(component(|| {
+                  SearchField(
+                    cx,
+                    SearchField_Props::builder()
+                      .search(&state.search)
+                      .loading(&state.loading)
+                      .build(),
+                  )
+                }))
+                .c(component(|| IntroText(cx))),
+            )
             .view(cx)
             .into(),
         )
@@ -118,7 +122,14 @@ fn IntroText<G: Html>(cx: Scope) -> View<G> {
 
 #[engine_only_fn]
 fn head(cx: Scope) -> View<SsrNode> {
-  component(|| HeadCommon(cx, HeadCommon_Props::builder().page_title("Index").build()))
+  component(|| {
+    HeadCommon(
+      cx,
+      HeadCommon_Props::builder()
+        .page_title("Torrents-csv")
+        .build(),
+    )
+  })
 }
 
 #[engine_only_fn]

@@ -27,7 +27,8 @@ fn search_page<G: Html>(cx: Scope, state: &SearchPageStateRx) -> View<G> {
       cx,
       ScaffoldProps::builder()
         .children(
-          div()
+          section()
+            .class("section pt-1")
             .c(
               div()
                 .class("container")
@@ -77,10 +78,9 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
         .view(|cx, torrent| {
           let magnet = magnet_link(&torrent);
           div()
-            .class("card mb-1")
+            .class("box mb-2")
             .c(
               div()
-                .class("card-content")
                 .c(
                   a()
                     .class("title is-6")
@@ -89,18 +89,8 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                 )
                 .c(
                   div()
-                    .class("columns is-mobile is-vcentered")
-                    .c(div().class("column").c(component(|| {
-                      IconAndText(
-                        cx,
-                        IconAndText_Props::builder()
-                          .icon("feather/database")
-                          .text(human_bytes(torrent.size_bytes as f64))
-                          .text_class(None)
-                          .build(),
-                      )
-                    })))
-                    .c(div().class("column").c(component(|| {
+                    .class("mt-1 is-flex is-justify-content-space-between")
+                    .c(div().c(component(|| {
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
@@ -110,17 +100,17 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                           .build(),
                       )
                     })))
-                    .c(div().class("column").c(component(|| {
+                    .c(div().c(component(|| {
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
-                          .icon("feather/download")
-                          .text(format_num!(".2s", torrent.leechers))
-                          .text_class(Some("has-text-danger"))
+                          .icon("feather/database")
+                          .text(human_bytes(torrent.size_bytes as f64))
+                          .text_class(None)
                           .build(),
                       )
                     })))
-                    .c(div().class("column").c(component(|| {
+                    .c(div().c(component(|| {
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
