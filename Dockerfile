@@ -18,7 +18,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 
 # Build the project
-RUN perseus deploy
+RUN perseus deploy --no-system-tools-cache
 
 # The alpine runner
 FROM alpine:latest as runner
