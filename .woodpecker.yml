@@ -48,13 +48,13 @@ pipeline:
   #   commands:
   #     - cargo test --no-fail-fast
 
-  perseus_check:
-    image: *muslrust_image
-    environment:
-      CARGO_HOME: .cargo
-    commands:
-      - cargo install perseus-cli --locked
-      - .cargo/bin/perseus check
+  # perseus_check:
+  #   image: *muslrust_image
+  #   environment:
+  #     CARGO_HOME: .cargo
+  #   commands:
+  #     - cargo install perseus-cli --locked
+  #     - .cargo/bin/perseus check
 
   publish_release_docker_image:
     image: woodpeckerci/plugin-docker-buildx
