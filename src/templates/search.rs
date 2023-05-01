@@ -6,9 +6,8 @@ use crate::{
   },
   constants::DEFAULT_ENDPOINT,
   types::torrent::Torrent,
-  utils::{magnet_link, pretty_date},
+  utils::{magnet_link, pretty_date, pretty_num},
 };
-use format_num::format_num;
 use human_bytes::human_bytes;
 use perseus::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -95,7 +94,7 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                         cx,
                         IconAndText_Props::builder()
                           .icon("feather/upload")
-                          .text(format_num!(".2s", torrent.seeders))
+                          .text(pretty_num(torrent.seeders))
                           .text_class(Some("has-text-primary"))
                           .build(),
                       )

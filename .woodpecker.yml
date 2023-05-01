@@ -13,48 +13,48 @@ pipeline:
       - git submodule init
       - git submodule update --recursive --remote
 
-  # prettier_markdown_check:
-  #   image: tmknom/prettier
-  #   commands:
-  #     - prettier -c *.md
+  prettier_markdown_check:
+    image: tmknom/prettier
+    commands:
+      - prettier -c *.md
 
-  # # use minimum supported rust version for most steps
-  # cargo_fmt:
-  #   image: *muslrust_image
-  #   environment:
-  #     # store cargo data in repo folder so that it gets cached between steps
-  #     CARGO_HOME: .cargo
-  #   commands:
-  #     # need make existing toolchain available
-  #     - cp ~/.cargo . -r
-  #     - rustup toolchain install nightly
-  #     - rustup component add rustfmt --toolchain nightly
-  #     - cargo +nightly fmt -- --check
+  # use minimum supported rust version for most steps
+  cargo_fmt:
+    image: *muslrust_image
+    environment:
+      # store cargo data in repo folder so that it gets cached between steps
+      CARGO_HOME: .cargo
+    commands:
+      # need make existing toolchain available
+      - cp ~/.cargo . -r
+      - rustup toolchain install nightly
+      - rustup component add rustfmt --toolchain nightly
+      - cargo +nightly fmt -- --check
 
-  # cargo_clippy:
-  #   image: *muslrust_image
-  #   environment:
-  #     CARGO_HOME: .cargo
-  #   commands:
-  #       # latest rust for clippy to get extra checks
-  #       # when adding new clippy lints, make sure to also add them in scripts/fix-clippy.sh
-  #     - rustup component add clippy
-  #     - cargo clippy
+  cargo_clippy:
+    image: *muslrust_image
+    environment:
+      CARGO_HOME: .cargo
+    commands:
+        # latest rust for clippy to get extra checks
+        # when adding new clippy lints, make sure to also add them in scripts/fix-clippy.sh
+      - rustup component add clippy
+      - cargo clippy
 
-  # cargo_test:
-  #   image: *muslrust_image
-  #   environment:
-  #     CARGO_HOME: .cargo
-  #   commands:
-  #     - cargo test --no-fail-fast
+  cargo_test:
+    image: *muslrust_image
+    environment:
+      CARGO_HOME: .cargo
+    commands:
+      - cargo test --no-fail-fast
 
-  # perseus_check:
-  #   image: *muslrust_image
-  #   environment:
-  #     CARGO_HOME: .cargo
-  #   commands:
-  #     - cargo install perseus-cli --locked
-  #     - .cargo/bin/perseus check
+  perseus_check:
+    image: *muslrust_image
+    environment:
+      CARGO_HOME: .cargo
+    commands:
+      - cargo install perseus-cli --locked
+      - .cargo/bin/perseus check
 
   publish_release_docker_image:
     image: woodpeckerci/plugin-docker-buildx
