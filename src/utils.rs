@@ -10,7 +10,12 @@ pub fn pretty_date(unix: u32) -> String {
 }
 
 pub fn pretty_num(num: u32) -> String {
-  format_num!(".0s", num)
+  // Annoying workaround because rust doesn't have pretty num crate
+  if num > 100 {
+    format_num!(".3s", num)
+  } else {
+    num.to_string()
+  }
 }
 
 pub fn magnet_link(torrent: &Torrent) -> String {
