@@ -7,19 +7,18 @@ use sycamore::{builder::prelude::*, component::Prop, prelude::*};
 pub fn Scaffold<'a, G: Html>(cx: Scope<'a>, state: ScaffoldProps<'a, G>) -> View<G> {
   let children = state.children.call(cx);
 
-  // TODO navbar search doesn't work
   // Use your own signal if needed
-  // let search_field = state.search.unwrap_or(create_signal(cx, String::new()));
-  // let loading = state.loading.unwrap_or(create_signal(cx, false));
+  let search_field = state.search.unwrap_or(create_signal(cx, String::new()));
+  let loading = state.loading.unwrap_or(create_signal(cx, false));
 
   div()
     .c(component(|| {
       NavBar(
         cx,
         NavBar_Props::builder()
-          // .show_search_buttons(state.show_search_buttons)
-          // .search(search_field)
-          // .loading(loading)
+          .show_button(state.show_button)
+          .search(search_field)
+          .loading(loading)
           .build(),
       )
     }))
@@ -63,9 +62,9 @@ fn Footer<G: Html>(cx: Scope) -> View<G> {
 #[component(inline_props)]
 pub fn NavBar<'a, G: Html>(
   cx: Scope<'a>,
-  // show_search_buttons: bool,
-  // search: &'a Signal<String>,
-  // loading: &'a Signal<bool>,
+  show_button: bool,
+  search: &'a Signal<String>,
+  loading: &'a Signal<bool>,
 ) -> View<G> {
   let expanded = create_signal(cx, false);
   nav()
@@ -110,33 +109,57 @@ pub fn NavBar<'a, G: Html>(
                 .class("navbar-item")
                 .attr("href", REPO_URL)
                 .c(component(|| {
-                  Icon(cx, Icon_Props::builder().icon("feather/github").build())
+                  Icon(cx, Icon_Props::builder().icon("github").build())
                 })),
-            ), // .c(
-               //   div()
-               //     .class("navbar-item field has-addons")
-               //     .dyn_class("is-hidden", move || !show_search_buttons)
-               //     .c(
-               //       div()
-               //         .class("control")
-               //         .c(view! { cx, input(class = "input", bind:value = search)}),
-               //     )
-               //     .c(
-               //       div().class("control").c(
-               //         a()
-               //           .class("button is-info")
-               //           .dyn_class("is-loading", || *loading.get())
-               //           .dyn_bool_attr("disabled", || *loading.get())
-               //           // TODO this isn't working from the search page
-               //           .attr("rel", "external")
-               //           // .dyn_attr("href", move || Some(format!("search/{}", *search.get())))
-               //           .attr("href", format!("search/{}", *search.get()))
-               //           // .attr("href", "search/chef")
-               //           .t("Search"),
-               //       ),
-               //     ),
-               // ),
+            )
+            .c(component(|| {
+              SearchField(
+                cx,
+                SearchField_Props::builder()
+                  .search(search)
+                  .loading(loading)
+                  .show_button(show_button)
+                  .navbar_item(true)
+                  .build(),
+              )
+            })),
         ),
+    )
+    .view(cx)
+}
+
+#[component(inline_props)]
+pub fn SearchField<'a, G: Html>(
+  cx: Scope<'a>,
+  search: &'a Signal<String>,
+  loading: &'a Signal<bool>,
+  show_button: bool,
+  #[builder(default)] is_expanded: bool,
+  #[builder(default)] navbar_item: bool,
+) -> View<G> {
+  div()
+    .class("field has-addons")
+    .dyn_class("is-hidden", move || !show_button)
+    .dyn_class("navbar-item", move || navbar_item)
+    .c(
+      div()
+        .class("control")
+        .dyn_class("is-expanded", move || is_expanded)
+        .c(view! {
+          cx,
+          input(class = "input", placeholder = "Search...", bind:value = search)
+        }),
+    )
+    .c(
+      div().class("control").c(
+        a()
+          .class("button is-info")
+          .dyn_class("is-loading", || *loading.get())
+          .dyn_bool_attr("disabled", || *loading.get())
+          .dyn_attr("href", || Some(format!("search/{}", *search)))
+          .on("click", |_| loading.set(true))
+          .t("Search"),
+      ),
     )
     .view(cx)
 }
@@ -145,10 +168,9 @@ pub fn NavBar<'a, G: Html>(
 pub struct ScaffoldProps<'a, G: Html> {
   /// The content to put inside the layout.
   pub children: Children<'a, G>,
-  // TODO navbar searching doesn't work
-  // pub show_search_buttons: bool,
-  // #[builder(default)]
-  // pub search: Option<&'a Signal<String>>,
-  // #[builder(default)]
-  // pub loading: Option<&'a Signal<bool>>,
+  pub show_button: bool,
+  #[builder(default)]
+  pub search: Option<&'a Signal<String>>,
+  #[builder(default)]
+  pub loading: Option<&'a Signal<bool>>,
 }
