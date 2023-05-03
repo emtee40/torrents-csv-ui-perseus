@@ -81,7 +81,7 @@ pub fn NavBar<'a, G: Html>(
             IconAndText_Props::builder()
               .text("Torrents-csv".to_string())
               .text_class(None)
-              .icon("feather/database")
+              .icon("database")
               .build(),
           )
         })))
