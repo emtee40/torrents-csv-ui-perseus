@@ -25,6 +25,8 @@ fn search_page<G: Html>(cx: Scope, state: &SearchPageStateRx) -> View<G> {
     Scaffold(
       cx,
       ScaffoldProps::builder()
+        .search(None)
+        .show_button(true)
         .children(
           section()
             .class("section pt-1")

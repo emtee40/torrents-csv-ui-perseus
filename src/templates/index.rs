@@ -1,7 +1,7 @@
 use crate::{
   components::{
     head_common::{HeadCommon, HeadCommon_Props},
-    scaffold::{Scaffold, ScaffoldProps},
+    scaffold::{Scaffold, ScaffoldProps, SearchField, SearchField_Props},
   },
   constants::{ANDROID_APP_REPO_URL, REPO_URL},
 };
@@ -25,6 +25,9 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
     Scaffold(
       cx,
       ScaffoldProps::builder()
+        .show_button(false)
+        .search(Some(&state.search))
+        .loading(Some(&state.loading))
         .children(
           section()
             .class("section pt-1")
@@ -37,6 +40,8 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
                     SearchField_Props::builder()
                       .search(&state.search)
                       .loading(&state.loading)
+                      .show_button(true)
+                      .is_expanded(true)
                       .build(),
                   )
                 }))
@@ -48,32 +53,6 @@ fn index_page<G: Html>(cx: Scope, state: &IndexPageStateRx) -> View<G> {
         .build(),
     )
   })
-}
-
-#[component(inline_props)]
-fn SearchField<'a, G: Html>(
-  cx: Scope<'a>,
-  search: &'a Signal<String>,
-  loading: &'a Signal<bool>,
-) -> View<G> {
-  div()
-    .class("field has-addons")
-    .c(div().class("control is-expanded").c(view! {
-      cx,
-      input(class = "input", placeholder = "Search...", bind:value = search)
-    }))
-    .c(
-      div().class("control").c(
-        a()
-          .class("button is-info")
-          .dyn_class("is-loading", || *loading.get())
-          .dyn_bool_attr("disabled", || *loading.get())
-          .dyn_attr("href", || Some(format!("search/{}", *search)))
-          .on("click", |_| loading.set(true))
-          .t("Search"),
-      ),
-    )
-    .view(cx)
 }
 
 #[component]
