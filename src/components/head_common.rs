@@ -22,5 +22,18 @@ pub fn HeadCommon<'a, G: Html>(cx: Scope<'a>, page_title: &'a str) -> View<G> {
       .attr("type", "text/css")
       .attr("href", "https://unpkg.com/bulma-prefers-dark")
       .view(cx),
+    link()
+      .attr("rel", "stylesheet")
+      .attr("type", "text/css")
+      .attr(
+        "href",
+        "https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css",
+      )
+      .attr(
+        "integrity",
+        "sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=",
+      )
+      .attr("crossorigin", "anonymous")
+      .view(cx),
   ])
 }

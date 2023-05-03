@@ -25,6 +25,10 @@ pub fn IconAndText<'a, G: Html>(
 pub fn Icon<'a, G: Html>(cx: Scope<'a>, icon: &'a str) -> View<G> {
   span()
     .class("icon")
-    .c(img().attr("src", format!("https://icongr.am/{icon}.svg")))
+    .c(
+      i()
+        .class(format!("fa fa-{icon}"))
+        .bool_attr("aria-hidden", true),
+    )
     .view(cx)
 }

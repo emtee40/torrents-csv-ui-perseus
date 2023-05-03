@@ -36,7 +36,7 @@ fn search_page<G: Html>(cx: Scope, state: &SearchPageStateRx) -> View<G> {
                     a().attr("href", "").c(IconAndText(
                       cx,
                       IconAndText_Props::builder()
-                        .icon("feather/arrow-left")
+                        .icon("arrow-left")
                         .text("Back".into())
                         .text_class(None)
                         .build(),
@@ -93,7 +93,7 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
-                          .icon("feather/upload")
+                          .icon("upload")
                           .text(pretty_num(torrent.seeders))
                           .text_class(Some("has-text-primary"))
                           .build(),
@@ -103,7 +103,7 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
-                          .icon("feather/database")
+                          .icon("database")
                           .text(human_bytes(torrent.size_bytes as f64))
                           .text_class(None)
                           .build(),
@@ -113,7 +113,7 @@ fn TorrentCard<'a, G: Html>(cx: Scope<'a>, torrents: &'a ReadSignal<Vec<Torrent>
                       IconAndText(
                         cx,
                         IconAndText_Props::builder()
-                          .icon("feather/calendar")
+                          .icon("calendar-o")
                           .text(pretty_date(torrent.created_unix))
                           .text_class(None)
                           .build(),
