@@ -137,8 +137,12 @@ pub fn SearchField<'a, G: Html>(
   #[builder(default)] is_expanded: bool,
   #[builder(default)] navbar_item: bool,
 ) -> View<G> {
-  div()
+  form()
     .class("field has-addons")
+    .on("submit", |_| {
+      loading.set(true);
+      navigate(&format!("search/{}", *search));
+    })
     .dyn_class("is-hidden", move || !show_button)
     .dyn_class("navbar-item", move || navbar_item)
     .c(
@@ -152,12 +156,11 @@ pub fn SearchField<'a, G: Html>(
     )
     .c(
       div().class("control").c(
-        a()
+        button()
+          .attr("type", "submit")
           .class("button is-info")
           .dyn_class("is-loading", || *loading.get())
           .dyn_bool_attr("disabled", || *loading.get())
-          .dyn_attr("href", || Some(format!("search/{}", *search)))
-          .on("click", |_| loading.set(true))
           .t("Search"),
       ),
     )
